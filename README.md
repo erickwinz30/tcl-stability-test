@@ -1,44 +1,23 @@
-# Stability Team Technical Test
+# Stability Team Technical Test - Submission
 
-This repository contains a simple Task Manager API built with Go and Fiber.
-Your task is to improve the stability and correctness of this system.
+## 1) Issues Found
 
-## Setup
+1. Belum ada input validation saat membuat task baru.
+2. Data task disimpan di variabel in-memory, sehingga tidak persisten.
+3. Ada risiko race condition saat banyak request mengakses data secara bersamaan.
+4. Format response API belum konsisten dan kurang jelas.
+5. Belum ada logic auto-increment ID saat menambahkan task baru.
 
-Install dependencies:
-go mod tidy
+## 2) How I Fixed Them
 
-Run the server:
-go run main.go
+1. Menambahkan validation untuk request create/update task menggunakan validator pada field yang dibutuhkan.
+2. Memindahkan penyimpanan task dari variabel hardcoded ke file `data/tasks.json` agar data persisten.
+3. Menambahkan `sync.RWMutex` untuk mengamankan operasi read/write ke data task.
+4. Menstandarkan format response sukses dan error menggunakan type response agar konsisten di semua endpoint.
+5. Menambahkan logic auto-generate ID saat create task dengan mengambil ID terbesar yang ada lalu menambahkannya 1.
 
-Server will run at:
-http://localhost:3000
+## 3) Improvements Added
 
-## Available Endpoints
-
-GET /tasks  
-GET /tasks/:id  
-POST /tasks  
-DELETE /tasks/:id
-
-## Your Tasks
-
-1. Run the project
-2. Identify issues or bugs
-3. Fix the issues
-4. Add one improvement to the project
-
-Examples of improvements:
-- input validation
-- better error handling
-- improved API responses
-- code refactoring
-
-## Submission
-
-Submit a GitHub repository containing:
-- your updated code
-- a README explaining:
-  - what issues you found
-  - how you fixed them
-  - what improvement you added
+1. Menambahkan endpoint edit task (update title dan done) dengan pengecekan `no changes`.
+2. Menambahkan auto-generate ID saat create task.
+3. Menambahkan rate limiter pada aplikasi untuk membatasi request berlebihan.
